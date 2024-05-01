@@ -43,7 +43,7 @@ class SubjectWindow(QMainWindow):
         with self.connection as connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                 cursor.execute(
-                    "SELECT gradeid, grade, comment FROM (select * from grades where subject = %s) where studentid = %s",
+                    "SELECT gradeid, grade, comment FROM (select * from grades where subject = %s) g where studentid = %s",
                     (
                         self.subject,
                         self.student_id,

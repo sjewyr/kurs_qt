@@ -1,0 +1,43 @@
+--
+-- PostgreSQL database cluster dump
+--
+
+SET default_transaction_read_only = off;
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+
+--
+-- Roles
+--
+
+CREATE ROLE student;
+ALTER ROLE student WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:IiyE+lwMfBMpT5HJyeS21g==$CW9mP4sr4sjyjVOuwyPOtn99SRGROHZmJ9QhsPxc+Ss=:i2HhIPJ7ckm6QZg1CLOhMrIAT1XYTbISr1MII1cN7Ks=';
+CREATE ROLE student_role;
+ALTER ROLE student_role WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE teacher;
+ALTER ROLE teacher WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:aafyxIwOHhD4jgRJmsGI0g==$vIrY1A1e0P0vB5ik4u55tuqSj+o0hcW7TzegZv4aM44=:/9GM1IU564ruspnCAQ13QURZpHbGHhpg39ham7c1IfM=';
+CREATE ROLE teacher_role;
+ALTER ROLE teacher_role WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
+
+--
+-- User Configurations
+--
+
+
+--
+-- Role memberships
+--
+
+GRANT student_role TO student WITH INHERIT TRUE GRANTED BY postgres;
+GRANT teacher_role TO teacher WITH INHERIT TRUE GRANTED BY postgres;
+
+
+
+
+
+
+--
+-- PostgreSQL database cluster dump complete
+--
+

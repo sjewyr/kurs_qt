@@ -8,5 +8,6 @@ pip install -r requirements.txt
 # Восстановление из бекапа  
 cd "c:\Program Files\PostgreSQL\16\bin"  
 createdb -U USERNAME students  
-psql.exe -U USERNAME -d students -f BACKUP_FILE_NAME_AND_PATH
+psql.exe -U postgres -d students -f BACKUP_FILE_PATH\roles.sql
+psql.exe -U postgres -d students -f BACKUP_FILE_PATH\backup.sql
 
