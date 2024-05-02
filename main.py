@@ -49,7 +49,7 @@ class LoginWindow(QMainWindow):
 class MainWindow(QMainWindow):
     def __init__(self, connection: ConnectionManager):
         super().__init__()
-        self.setWindowTitle("Main Menu")
+        self.setWindowTitle("Главное меню")
         self.setGeometry(100, 100, 400, 200)
         self.connection: ConnectionManager = connection
 

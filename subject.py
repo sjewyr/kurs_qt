@@ -28,12 +28,12 @@ class SubjectWindow(QMainWindow):
         self.setGeometry(100, 100, 600, 500)
         self.layout = QVBoxLayout()
         self.list_widget = QListWidget(self)
-        self.list_widget.itemDoubleClicked.connect(self.update_grade)
         self.layout.addWidget(self.list_widget)
         if self.connection.user == "teacher":
             self.add_button = QPushButton("Добавить оценку", self)
             self.add_button.clicked.connect(self.add_grade)
             self.layout.addWidget(self.add_button)
+            self.list_widget.itemDoubleClicked.connect(self.update_grade)
         self.centralWidget = QWidget(self)
         self.setCentralWidget(self.centralWidget)
         self.centralWidget.setLayout(self.layout)
