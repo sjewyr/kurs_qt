@@ -76,6 +76,7 @@ class SubjectWindow(QMainWindow):
             list_item.setSizeHint(item_widget.sizeHint())
             self.list_widget.addItem(list_item)
             self.list_widget.setItemWidget(list_item, item_widget)
+            self.grade_window.show_grades()
 
     def delete_grade(self, gradeid):
         with self.connection as connection:

@@ -21,6 +21,7 @@ from connection import ConnectionManager
 from addlesson import AddLesson
 from attendance import AttendanceWindow
 from groups import GroupWindow
+import utils
 
 
 class LoginWindow(QMainWindow):
@@ -85,16 +86,12 @@ class ScheduleWindow(QMainWindow):
         self.connection: ConnectionManager = connection
         self.calendar = QCalendarWidget(self)
         self.group_combo = QComboBox(self)
-        self.seq_combo = QComboBox(self)
         self.label = QLabel(self)
         self.label.setText("Выберите дату и группу")
-        self.seq_combo.addItems(str(i) for i in range(1, 11))
-        with self.connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM groups")
-                groups = cursor.fetchall()
-                for group in groups:
-                    self.group_combo.addItem(group[1], group[0])
+        groups = utils.get_groups(self.connection)
+        for group in groups:
+            self.group_combo.addItem(group[0], group[1])
+
         self.view_button = QPushButton("Показать расписание", self)
         self.view_button.clicked.connect(self.view_lessons)
         self.list_widget = QListWidget()
@@ -103,7 +100,6 @@ class ScheduleWindow(QMainWindow):
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.calendar)
         main_layout.addWidget(self.group_combo)
-        main_layout.addWidget(self.seq_combo)
         main_layout.addWidget(self.view_button)
         main_layout.addWidget(self.label)
 
@@ -332,70 +328,6 @@ class App:
     def open_main_window(self):
         self.main_window = MainWindow(self.conn)
         self.main_window.show()
-
-
-class PlanWindow(QMainWindow):
-    def __init__(self, connection: ConnectionManager):
-        super().__init__()
-        self.setWindowTitle("Plan Lesson")
-        self.setGeometry(100, 100, 800, 700)
-        layout = QVBoxLayout()
-        self.connection: ConnectionManager = connection
-        self.calendar = QCalendarWidget(self)
-        self.group_combo = QComboBox(self)
-        self.subject_combo = QComboBox(self)
-        self.seq_combo = QComboBox(self)
-        self.plan_button = QPushButton("Plan Lesson", self)
-        self.result = QLabel(self)
-        self.result.setText("Планирование занятия")
-        self.seq_combo.addItems(str(i) for i in range(1, 11))
-        with self.connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM groups")
-                groups = cursor.fetchall()
-                for group in groups:
-                    self.group_combo.addItem(group[1], group[0])
-
-                cursor.execute("SELECT subject FROM subject")
-                subjects = cursor.fetchall()
-                for subject in subjects:
-                    self.subject_combo.addItem(subject[0])
-
-        self.plan_button.clicked.connect(self.plan_lesson)
-        widget = QWidget()
-        layout.addWidget(self.calendar)
-        layout.addWidget(self.group_combo)
-        layout.addWidget(self.subject_combo)
-        layout.addWidget(self.seq_combo)
-        layout.addWidget(self.plan_button)
-        layout.addWidget(self.result)
-        widget.setLayout(layout)
-        self.setCentralWidget(widget)
-
-    def plan_lesson(self):
-        try:
-            with self.connection as connection:
-                with connection.cursor(
-                    cursor_factory=psycopg2.extras.DictCursor
-                ) as cursor:
-                    date = self.calendar.selectedDate().toString("yyyy-MM-dd")
-                    group_id = self.group_combo.itemData(
-                        self.group_combo.currentIndex()
-                    )
-                    subject = self.subject_combo.currentText()
-                    seq = int(self.seq_combo.currentText())
-                    cursor.execute(
-                        "Select * from PlanLesson(%s, %s, %s, %s)",
-                        (group_id, subject, date, seq),
-                    )
-                    cursor.connection.commit()
-        except Exception as e:
-            self.result.setText("Ошибка при планировании занятия")
-            print(e)
-        else:
-            self.result.setText(
-                f"Планирование занятия {self.gro} для группы {self.group_combo.currentText()} прошло успешно"
-            )
 
 
 def main():
