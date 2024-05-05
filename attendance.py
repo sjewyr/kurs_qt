@@ -24,7 +24,7 @@ class AttendanceWindow(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("Посещаемость")
-        self.setGeometry(100, 100, 300, 150)
+        self.setGeometry(100, 100, 450, 600)
         self.layout = QVBoxLayout()
         self.label = QLabel("Ошибка", self)
         self.list_widget = QListWidget(self)
@@ -73,7 +73,7 @@ class AttendanceWindow(QMainWindow):
             # Текстовая метка с именем
             label = QLabel(
                 " ".join(
-                    [row["firstname"], row["surname"], row["patronymic"], row["cardid"]]
+                    [row["surname"], row["firstname"], row["patronymic"], row["cardid"]]
                 )
             )
             item_layout.addWidget(label)

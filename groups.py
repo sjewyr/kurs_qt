@@ -28,7 +28,9 @@ class GroupWindow(QMainWindow):
         layout = QVBoxLayout()
         self.connection: ConnectionManager = connection
         self.group_combo = QComboBox(self)
-
+        self.group_combo.setEditable(True)
+        self.group_combo.setInsertPolicy(QComboBox.NoInsert)
+        self.group_combo.lineEdit().setClearButtonEnabled(True)
         self.update_groups()
 
         self.button = QPushButton("Информация о группе", self)
@@ -62,7 +64,7 @@ class GroupWindow(QMainWindow):
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                 cursor.execute(
                     (
-                        "select studentid, firstname, surname, patronymic, cardid from students where groupid = %s"
+                        "select studentid, firstname, surname, patronymic, cardid from students where groupid = %s ORDER BY surname"
                     ),
                     (group_id,),
                 )
@@ -74,7 +76,7 @@ class GroupWindow(QMainWindow):
             # Текстовая метка с именем
             label = QLabel(
                 " ".join(
-                    [row["firstname"], row["surname"], row["patronymic"], row["cardid"]]
+                    [row["surname"], row["firstname"], row["patronymic"], row["cardid"]]
                 )
             )
             item_layout.addWidget(label)

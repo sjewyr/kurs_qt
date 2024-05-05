@@ -22,6 +22,7 @@ from addlesson import AddLesson
 from attendance import AttendanceWindow
 from groups import GroupWindow
 import utils
+from subjectlist import SubjectListWindow
 
 
 class LoginWindow(QMainWindow):
@@ -60,9 +61,13 @@ class MainWindow(QMainWindow):
         self.grades_button = QPushButton("Информация о группах", self)
         self.grades_button.clicked.connect(self.show_group_window)
 
+        self.subject_button = QPushButton("Информация о предметах", self)
+        self.subject_button.clicked.connect(self.show_subject_window)
+
         layout = QVBoxLayout()
         layout.addWidget(self.attendance_button)
         layout.addWidget(self.grades_button)
+        layout.addWidget(self.subject_button)
 
         central_widget = QWidget()
         central_widget.setLayout(layout)
@@ -76,6 +81,10 @@ class MainWindow(QMainWindow):
         self.group_window = GroupWindow(self.connection)
         self.group_window.show()
 
+    def show_subject_window(self):
+        self.subject_window = SubjectListWindow(self.connection)
+        self.subject_window.show()
+
 
 class ScheduleWindow(QMainWindow):
     def __init__(self, connection: ConnectionManager):
@@ -86,6 +95,10 @@ class ScheduleWindow(QMainWindow):
         self.connection: ConnectionManager = connection
         self.calendar = QCalendarWidget(self)
         self.group_combo = QComboBox(self)
+        self.group_combo = QComboBox(self)
+        self.group_combo.setEditable(True)
+        self.group_combo.setInsertPolicy(QComboBox.NoInsert)
+        self.group_combo.lineEdit().setClearButtonEnabled(True)
         self.label = QLabel(self)
         self.label.setText("Выберите дату и группу")
         groups = utils.get_groups(self.connection)
