@@ -122,11 +122,12 @@ def bloat_groups(conn: ConnectionManager):
         "БСБС-{}-{}",
         "БМБО-{}-{}",
     ]
+    patterns = patterns[0:4]
     with conn as connection:
         with connection.cursor() as cursor:
             for z in range(len(patterns)):
-                for i in range(1, 17):
-                    for j in range(15, 24):
+                for i in range(1, 5):
+                    for j in range(19, 24):
                         try:
                             cursor.execute(
                                 "SELECT * FROM create_group (%s)",
@@ -170,4 +171,8 @@ def fix_card_id(conn: ConnectionManager):
                     print(f"{studentid+1} successfully")
 
 
+bloat_groups(conn)
+
 bloat_students(conn)
+
+bloat_attendance(conn)

@@ -40,14 +40,16 @@ class AddGradeWindow(QMainWindow):
                 subjects = cursor.fetchall()
                 for subject in subjects:
                     self.subject_combo.addItem(subject[0])
-
+        self.subject_combo.setEditable(True)
+        self.subject_combo.setInsertPolicy(QComboBox.NoInsert)
+        self.subject_combo.lineEdit().setClearButtonEnabled(True)
         if self.subject:
             self.subject_combo.setCurrentText(self.subject)
             self.subject_combo.setEnabled(False)
 
         gradelabel = QLabel("Введите оценку", self)
         self.grade_combo = QComboBox(self)
-        self.grade_combo.addItems(str(i) for i in range(1, 6))
+        self.grade_combo.addItems(str(i) for i in range(2, 6))
         commentlabel = QLabel("Введите комментарий", self)
         self.comment_edit = QTextEdit(self)
         if self.gradeid:
@@ -96,7 +98,6 @@ class AddGradeWindow(QMainWindow):
                 cursor.connection.commit()
         if self.previous:
             self.previous.show_grades()
-        self.close()
 
     def update_grade(self):
         with self.connection as connection:
@@ -112,4 +113,3 @@ class AddGradeWindow(QMainWindow):
                 cursor.connection.commit()
         if self.previous:
             self.previous.show_grades()
-        self.close()

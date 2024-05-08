@@ -85,15 +85,13 @@ class AttendanceWindow(QMainWindow):
             item_layout.addWidget(combo_box)
             if self.connection.user == "teacher":
                 # Кнопка для отправки изменений в базу данных
-                button = QPushButton("Отметить")
-                button.clicked.connect(
+                combo_box.currentTextChanged.connect(
                     lambda _, id=row[
                         "attendanceid"
                     ], combo_box=combo_box: self.update_attendance(
                         id, combo_box.currentText()
                     )
                 )
-                item_layout.addWidget(button)
             else:
                 combo_box.setDisabled(True)
 

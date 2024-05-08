@@ -21,6 +21,7 @@ from connection import ConnectionManager
 from addlesson import AddLesson
 from attendance import AttendanceWindow
 from groups import GroupWindow
+from student_info import StudentInfoWindow
 import utils
 from subjectlist import SubjectListWindow
 
@@ -52,8 +53,15 @@ class MainWindow(QMainWindow):
     def __init__(self, connection: ConnectionManager):
         super().__init__()
         self.setWindowTitle("Главное меню")
-        self.setGeometry(100, 100, 400, 200)
+        self.setFixedSize(400, 200)
         self.connection: ConnectionManager = connection
+
+        self.label = QLabel(self)
+        self.label.setText(
+            "Вы вошли как {}".format(
+                "студент" if self.connection.user == "student" else "учитель"
+            )
+        )
 
         self.attendance_button = QPushButton("Посмотреть расписание", self)
         self.attendance_button.clicked.connect(self.show_schedule_window)
@@ -64,10 +72,15 @@ class MainWindow(QMainWindow):
         self.subject_button = QPushButton("Информация о предметах", self)
         self.subject_button.clicked.connect(self.show_subject_window)
 
+        self.info_button = QPushButton("Информация о студенте", self)
+        self.info_button.clicked.connect(self.show_info_window)
+
         layout = QVBoxLayout()
+        layout.addWidget(self.label)
         layout.addWidget(self.attendance_button)
         layout.addWidget(self.grades_button)
         layout.addWidget(self.subject_button)
+        layout.addWidget(self.info_button)
 
         central_widget = QWidget()
         central_widget.setLayout(layout)
@@ -85,16 +98,19 @@ class MainWindow(QMainWindow):
         self.subject_window = SubjectListWindow(self.connection)
         self.subject_window.show()
 
+    def show_info_window(self):
+        self.info_window = StudentInfoWindow(self.connection)
+        self.info_window.show()
+
 
 class ScheduleWindow(QMainWindow):
     def __init__(self, connection: ConnectionManager):
         super().__init__()
         self.setWindowTitle("Расписание")
-        self.setGeometry(100, 100, 800, 700)
+        self.setFixedSize(800, 700)
 
         self.connection: ConnectionManager = connection
         self.calendar = QCalendarWidget(self)
-        self.group_combo = QComboBox(self)
         self.group_combo = QComboBox(self)
         self.group_combo.setEditable(True)
         self.group_combo.setInsertPolicy(QComboBox.NoInsert)
@@ -105,15 +121,14 @@ class ScheduleWindow(QMainWindow):
         for group in groups:
             self.group_combo.addItem(group[0], group[1])
 
-        self.view_button = QPushButton("Показать расписание", self)
-        self.view_button.clicked.connect(self.view_lessons)
+        self.group_combo.currentIndexChanged.connect(self.view_lessons)
+        self.calendar.selectionChanged.connect(self.view_lessons)
         self.list_widget = QListWidget()
 
         # Создаем компоновщик и добавляем виджеты
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.calendar)
         main_layout.addWidget(self.group_combo)
-        main_layout.addWidget(self.view_button)
         main_layout.addWidget(self.label)
 
         main_layout.addWidget(self.list_widget)
@@ -123,6 +138,7 @@ class ScheduleWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
+        self.view_lessons()
 
     def view_lessons(self):
         with self.connection as connection:

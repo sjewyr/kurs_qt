@@ -22,7 +22,7 @@ class SubjectListWindow(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
-        self.setGeometry(300, 300, 350, 500)
+        self.setFixedSize(350, 500)
         self.setWindowTitle("Предметы")
         layout = QVBoxLayout()
         self.list = QListWidget()

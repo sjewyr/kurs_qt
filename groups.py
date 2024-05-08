@@ -33,14 +33,12 @@ class GroupWindow(QMainWindow):
         self.group_combo.lineEdit().setClearButtonEnabled(True)
         self.update_groups()
 
-        self.button = QPushButton("Информация о группе", self)
-        self.button.clicked.connect(self.show_group_info)
+        self.group_combo.currentIndexChanged.connect(self.show_group_info)
         self.list_widget = QListWidget(self)
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
         self.centralWidget.setLayout(layout)
         layout.addWidget(self.group_combo)
-        layout.addWidget(self.button)
         layout.addWidget(self.list_widget)
         if self.connection.user == "teacher":
             self.add_group_button = QPushButton("Добавить группу", self)
@@ -52,6 +50,8 @@ class GroupWindow(QMainWindow):
             self.delete_group_button.clicked.connect(self.delete_group)
             layout.addWidget(self.update_group_button)
             self.update_group_button.clicked.connect(self.update_group)
+
+        self.show_group_info()
 
     def add_group(self):
         self.add_group_window = AddGroupWindow(self.connection, self)

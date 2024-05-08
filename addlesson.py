@@ -37,7 +37,9 @@ class AddLesson(QMainWindow):
                 subjects = cursor.fetchall()
                 for subject in subjects:
                     self.subject_combo.addItem(subject[0])
-
+        self.subject_combo.setEditable(True)
+        self.subject_combo.setInsertPolicy(QComboBox.NoInsert)
+        self.subject_combo.lineEdit().setClearButtonEnabled(True)
         self.centralWidget = QWidget(self)
         self.layout.addWidget(label)
         self.layout.addWidget(self.subject_combo)
