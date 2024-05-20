@@ -154,7 +154,7 @@ def fix_card_id(conn: ConnectionManager):
                 studentid = student[0]
                 cardid = student[1]
                 if len(cardid) == 7:
-                    raise Exception("ТЫ ЧЕ БЛЯТЬ ДЕЛАЕШЬ УРОД ЩАС ВСЕ ПО ПИЗДЕ ПОЙДЕТ")
+                    raise Exception("Зачилься, всё и так норм")
                 try:
                     card = [cardid[0:2], cardid[2:]]
                     card[1] = "0" + card[1]
