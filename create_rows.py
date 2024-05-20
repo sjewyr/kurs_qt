@@ -122,7 +122,7 @@ def bloat_groups(conn: ConnectionManager):
         "БСБС-{}-{}",
         "БМБО-{}-{}",
     ]
-    patterns = patterns[0:4]
+    patterns = patterns[0:3]
     with conn as connection:
         with connection.cursor() as cursor:
             for z in range(len(patterns)):
